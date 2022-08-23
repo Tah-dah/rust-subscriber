@@ -1,0 +1,27 @@
+[package]
+name = "subscriber"
+version = "0.1.0"
+edition = "2021"
+# [...]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[dev-dependencies]
+reqwest = "0.11"
+
+[lib]
+path = "src/lib.rs"
+
+
+# Notice the double square brackets: it's an array in TOML's syntax.
+# We can only have one library in a project, but we can have multiple binaries!
+# If you want to manage multiple libraries in the same repository
+[[bin]]
+path = "src/main.rs"
+name = "subscriber"
+
+
+
+[dependencies]
+actix-web = "4"
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+serde = { version = "1", features = ["derive"]}

@@ -4,7 +4,8 @@ use subscriber::run;
 
 //spins up instance of application and returns local host address
 async fn spawn_app() -> String {
-    let listener = TcpListener::bind("127.0.0.1:0").expect("Failed to bind random port");
+    let listener = TcpListener::bind("127.0.0.1:0")
+        .expect("Failed to bind random port");
     // We retrieve the port assigned to us by the OS
     let port = listener.local_addr().unwrap().port();
     let server = run(listener).expect("Failed to bind address");
@@ -51,7 +52,7 @@ async fn subscribe_returns_a_200_for_valid_form_data() {
  }
 
  #[tokio::test]
-async fn subscribe_returns_a_400_when_data_is_missing() {
+async fn subscribe_returns_a_400_when_data_is_missing() { //parametrised test: deals with bad inputs
 // Arrange
     let app_address = spawn_app();
     let client = reqwest::Client::new(); 

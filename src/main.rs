@@ -1,6 +1,6 @@
 use std::{net::TcpListener, sync::Arc};
 use subscriber::run;
-use actix_web::{web, App, HttpRequest, HttpServer, Responder};
+use actix_web::{web, App, HttpRequest, HttpServer, Responder, dev::Server};
 #[tokio::main]
 
 async fn health_check() -> impl Responder {
@@ -22,3 +22,8 @@ async fn health_check() -> impl Responder {
     .run()
     .await
     }
+
+fn spawn_app() {
+    let server = subscriber::run().expect("failed to bind address");
+    let _ = tokio::spawn(server);
+}

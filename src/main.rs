@@ -1,3 +1,6 @@
+use sqlx::postgres::PgPool;
+
+
 use std::net::TcpListener;
 use rust_subscriber::run;
 

@@ -70,3 +70,27 @@ async fn subscribe_returns_a_200_for_valid_form_data(){
        assert_eq!(200, response.status().as_u16());
   
 }
+#[tokio::test]
+
+async fn subscribe_returns_a_400_when_data_is_missing() {
+    //arange
+    let app_address = spawn_app();
+    let client = reqwest::Client::new();
+    let test_cases = vec![(
+        "name=le%20guin", "missing the email"),
+        ("email=franz_m_char%40gmail.com", "missing the email"),
+        ("", "missing both email and name")];
+
+        for (invalid_body, error_message) in test_cases {
+            //act
+            let response = client
+            .post(&format!("{}/subscriptions", &app_address))
+            .header("Contetnt-Type","application/x-www-form-urlencoded")
+            .body(invalid_body)
+            .send()
+            .await
+            .expect("failed to esecute request.");
+        }
+    
+        
+}

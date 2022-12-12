@@ -2,7 +2,7 @@ use sqlx::postgres::PgPool;
 
 
 use std::net::TcpListener;
-use rust_subscriber::run;
+use rust_subscriber::startup::run;
 
 #[tokio::main]
 async fn main() -> std::io::Result<()> {

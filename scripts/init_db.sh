@@ -43,18 +43,19 @@ docker run \
   -p "${DB_PORT}":5432 \
   -d postgres \
   postgres -N 1000”
+fi
 
-export PGPASSWORD="${DB_PASSWORD}"
-until psql -h "localhost" -U "${DB_USER}" -p "${DB_PORT}" -d "postgres" -c '\q'; do
+# ping postgres until ready for comamnds
+until PGPASSWORD="${DB_PASSWORD}"psql -h "localhost" -U "${DB_USER}" -p "${DB_PORT}" -d "postgres" -c '\q'; do
   >&2 echo "Postgres is still unavailable - sleeping"
   sleep 1
 done
 
 >&2 echo "Postgres is up and running on port ${DB_PORT}!"
 
-DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@localhost:${DB_PORT}/${DB_NAME}
-export DATABASE_URL
+export DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@localhost:${DB_PORT}/${DB_NAME}
 sqlx database create
+sqlx migrate run
 
 >&2 echo "Postgres has been migrated, ready to go!”
 

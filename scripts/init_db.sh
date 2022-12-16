@@ -25,6 +25,16 @@ DB_PORT="${POSTGRES_PORT:=5432}"
 # Check if a custom host has been set, otherwise default to 'localhost'
 DB_HOST="${POSTGRES_HOST:=localhost}"
 
+# Allow to skip Docker if a dockerized Postgres database is already running
+if [[ -z "${SKIP_DOCKER}" ]]
+then
+  # if a postgres container is running, print instructions to kill it and exit
+  RUNNING_POSTGRES_CONTAINER=$(docker ps --filter 'name=postgres' --format '{{.ID}}')
+  if [[ -n $RUNNING_POSTGRES_CONTAINER ]]; then
+    echo >&2 "there is a postgres container already running, kill it with"
+    echo >&2 "    docker kill ${RUNNING_POSTGRES_CONTAINER}"
+    exit 1
+  fi
 # Launch postgres using Docker
 docker run \
   -e POSTGRES_USER=${DB_USER} \
@@ -45,6 +55,10 @@ done
 DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@localhost:${DB_PORT}/${DB_NAME}
 export DATABASE_URL
 sqlx database create
+
+>&2 echo "Postgres has been migrated, ready to go!”
+
+
 
 
 
